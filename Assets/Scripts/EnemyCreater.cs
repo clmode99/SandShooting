@@ -12,7 +12,9 @@ public class EnemyCreater : MonoBehaviour {
     /* 変数の宣言 */
     public GameObject m_enemy;     // 敵オブジェクト
     [Range(2,15)]
-    public int m_enemy_num;        // 敵の数
+    public int   m_enemy_num;               // 敵の数
+    [Range(0.01f,0.5f)]
+    public float m_enemy_interval_second;   // 敵の出現間隔(秒)
 
     // スプライト
     [SerializeField, HeaderAttribute("Enemy Sprite")]
@@ -22,6 +24,7 @@ public class EnemyCreater : MonoBehaviour {
     public Sprite m_enemy_dummy;    // ダミー
 
     GameObject[] m_enemy_list;     // 敵の管理
+    bool m_is_init;                // 初期化
 
     /* 関数の定義 */
     /*------------------------------------
@@ -36,10 +39,12 @@ public class EnemyCreater : MonoBehaviour {
         /* 配列サイズ変更 */
         System.Array.Resize(ref m_enemy_list, m_enemy_num);
 
+        m_is_init = false;      // まだ初期化してないよ
+
         /* 敵の生成 */
         SpriteRenderer sr = m_enemy.GetComponent<SpriteRenderer>();
         float size_width = sr.bounds.size.x;        // 敵の画像幅
-        CreateEnemy(m_enemy_num, size_width);
+        StartCoroutine(CreateEnemy(m_enemy_num, size_width, m_enemy_interval_second));
     }
 
     /*------------------------------------
@@ -51,18 +56,27 @@ public class EnemyCreater : MonoBehaviour {
     ------------------------------------*/
     void Update()
     {
+        /* 初期化してないならだめ */
+        if (!m_is_init)
+            return;
+
         /* はさんでるか判定 */
         for (int i = 0; i < m_enemy_num - 1; ++i)
         {
+            /* 物理的に消えてるのは対象外 */
+            if (m_enemy_list[i] == null)
+                continue;
+
             /* 最初の端の色設定 */
             EnemyControl ec = m_enemy_list[i].GetComponent<EnemyControl>();
             COLOR first_color = ec.GetEnemyColor();
 
-            if ((first_color == COLOR.DUMMY) || (first_color==COLOR.NONE))     // ダミーと消えてるのは比較対象外
+            /* ダミーと消えてるのは対象外 */
+            if ((first_color == COLOR.DUMMY) || (first_color==COLOR.NONE))
                 continue;
 
             /* 色探索 */
-            for (int j = i + 1; j < m_enemy_num; ++j) 
+            for (int j = i + 1; j < m_enemy_num; ++j)
             {
                 /* 対象の色取得 */
                 ec = m_enemy_list[j].GetComponent<EnemyControl>();
@@ -72,7 +86,7 @@ public class EnemyCreater : MonoBehaviour {
                     break;
 
                 /* 色比較 */
-                if (first_color == target_color) 
+                if (first_color == target_color)
                 {
                     DestroyEnemy(i, j);
                     i = m_enemy_num;        // 二重ループ脱出のため
@@ -83,23 +97,29 @@ public class EnemyCreater : MonoBehaviour {
 
     }
 
-    /*------------------------------------
+    /*---------------------------------------------
     CreateEnemy
     
     summary:敵の生成
-    param  :数(int),画像幅(float)
-    return :なし(void)
-    ------------------------------------*/
-    void CreateEnemy(int num, float width)
+    param  :数(int),画像幅(float),出現秒数(float)
+    return :(IEnumerator)
+    ---------------------------------------------*/
+    IEnumerator CreateEnemy(int num, float width,float second)
     {
         for (int i = 0; i < num; ++i)
         {
-            m_enemy_list[i] = Instantiate(m_enemy, new Vector3(transform.position.x + (width * i) + (i * 0.1f), transform.position.y, transform.position.z), Quaternion.identity);
+            /* 敵の出現間隔を空ける */
+            yield return new WaitForSeconds(second);
+
+            /* 敵の生成 */
+            m_enemy_list[i] = Instantiate(m_enemy, new Vector3(transform.position.x + (width * i), transform.position.y, transform.position.z), Quaternion.identity);
 
             /* 色決め。最初はダミー */
             EnemyControl ec = m_enemy_list[i].GetComponent<EnemyControl>();
             ec.SetEnemyAttribute(m_enemy_dummy, COLOR.DUMMY);
         }
+
+        m_is_init = true;       // 初期化完了！
     }
 
     /*-------------------------------------------
@@ -120,6 +140,5 @@ public class EnemyCreater : MonoBehaviour {
             /* 衝突判定も消す */
             Destroy(m_enemy_list[i].GetComponent<BoxCollider2D>());
         }
-
     }
 }

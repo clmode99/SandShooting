@@ -53,7 +53,19 @@ public class EnemyControl : MonoBehaviour {
     ------------------------------------*/
     void OnCollisionEnter2D(Collision2D coll)
     {
-        /* 色変更 */
+        if (coll.gameObject.tag == "Bullet")
+            ChangeEnemyColor();
+    }
+
+    /*------------------------------------
+    ChangeEnemyColor
+    
+    summary:敵の色変更
+    param  :なし(void)
+    return :なし(void)
+    ------------------------------------*/
+    void ChangeEnemyColor()
+    {
         switch (m_current_color)
         {
             case COLOR.RED:
