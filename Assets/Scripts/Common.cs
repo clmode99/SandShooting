@@ -16,5 +16,5 @@ public enum COLOR
     BLUE,
     DUMMY,
 
-    NONE = -1,    // 消えた
+    NONE,    // 消えた
 }
