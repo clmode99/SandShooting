@@ -36,8 +36,7 @@ public class EnemyCreater : MonoBehaviour {
     ------------------------------------*/
     void Start()
     {
-        /* 配列サイズ変更 */
-        System.Array.Resize(ref m_enemy_list, m_enemy_num);
+        System.Array.Resize(ref m_enemy_list, m_enemy_num);     // 配列サイズ変更
 
         m_is_init = false;      // まだ初期化してないよ
 
@@ -137,8 +136,9 @@ public class EnemyCreater : MonoBehaviour {
             EnemyControl ec = m_enemy_list[i].GetComponent<EnemyControl>();
             ec.SetEnemyAttribute(null, COLOR.NONE);
 
-            /* 衝突判定も消す */
-            Destroy(m_enemy_list[i].GetComponent<BoxCollider2D>());
+            /* 物理計算は行わない */
+            BoxCollider2D bc = m_enemy_list[i].GetComponent<BoxCollider2D>();
+            bc.isTrigger = true;
         }
     }
 }

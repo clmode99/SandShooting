@@ -70,6 +70,7 @@ public class BulletControl : MonoBehaviour {
     ------------------------------------*/
     void OnTriggerEnter2D(Collider2D coll)
     {
-        Destroy(gameObject);
+        if (coll.gameObject.tag == "Border")
+            Destroy(gameObject);
     }
 }
