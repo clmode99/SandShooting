@@ -13,6 +13,16 @@ public class PlayerControl : MonoBehaviour {
     public float m_speedX;      // 速さ
     public GameObject m_bullet; // 弾
 
+    [SerializeField, Space(15)]
+    public float m_float_interval_second;   // 浮遊時間(秒)
+    public float m_float_distance;          // 浮遊距離
+    public Sprite m_player_left;
+    public Sprite m_player_right;
+
+    SpriteRenderer m_sr;
+    bool  m_is_float;            // 浮いてるか
+    float m_passage_time_ms;     // 経過時間(ミリ秒)
+
     /* 関数の定義 */
     /*------------------------------------
     Start
@@ -22,7 +32,13 @@ public class PlayerControl : MonoBehaviour {
     return :なし(void)
     ------------------------------------*/
     void Start()
-    {}
+    {
+        m_sr = GetComponent<SpriteRenderer>();
+        m_sr.sprite = m_player_left;
+
+        m_is_float = false;     // 下がってる
+        m_passage_time_ms = 0.0f;
+    }
 
     /*------------------------------------
     Update
@@ -37,6 +53,17 @@ public class PlayerControl : MonoBehaviour {
        if (Input.GetKey(KeyCode.LeftArrow))  MoveLeft();
        if (Input.GetKey(KeyCode.RightArrow)) MoveRight();
        if (Input.GetKeyDown(KeyCode.Space))  Shot();
+
+        /* 浮遊処理 */
+        m_passage_time_ms += Time.deltaTime;
+
+        if (m_passage_time_ms >= m_float_interval_second)
+        {
+            if (m_is_float) MoveDown();     // 上がってるなら下がる
+            else MoveUp();                  // 下がってるなら上げる
+
+            m_passage_time_ms = 0.0f;
+        }
     }
 
     /*------------------------------------
@@ -49,7 +76,7 @@ public class PlayerControl : MonoBehaviour {
     void MoveLeft()
     {
         float speedX = transform.position.x - m_speedX;
-        Move(speedX);
+        Move(speedX, transform.position.y);
     }
 
     /*------------------------------------
@@ -62,19 +89,51 @@ public class PlayerControl : MonoBehaviour {
     void MoveRight()
     {
         float speedX = transform.position.x + m_speedX;
-        Move(speedX);
+        Move(speedX, transform.position.y);
+    }
+
+    /*------------------------------------
+    MoveUp
+    
+    summary:上移動
+    param  :なし(void)
+    return :なし(void)
+    ------------------------------------*/
+    void MoveUp()
+    {
+        float speedY = transform.position.y + m_float_distance;
+        Move(transform.position.x, speedY);
+
+        m_sr.sprite = m_player_right;
+        m_is_float = true;
+    }
+
+    /*------------------------------------
+    MoveUp
+    
+    summary:下移動
+    param  :なし(void)
+    return :なし(void)
+    ------------------------------------*/
+    void MoveDown()
+    {
+        float speedY = transform.position.y - m_float_distance;
+        Move(transform.position.x, speedY);
+
+        m_sr.sprite = m_player_left;
+        m_is_float = false;
     }
 
     /*------------------------------------
     Move
     
     summary:移動
-    param  :速度Ｘ(float)
+    param  :速度Ｘ(float)、速度Ｙ(float)
     return :なし(void)
     ------------------------------------*/
-    void Move(float spdX)
+    void Move(float spdX, float spdY)
     {
-        transform.position = new Vector3(spdX, transform.position.y, transform.position.z);
+        transform.position = new Vector3(spdX, spdY, transform.position.z);
     }
 
     /*------------------------------------

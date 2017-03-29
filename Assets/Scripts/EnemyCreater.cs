@@ -129,9 +129,6 @@ public class EnemyCreater : MonoBehaviour {
 
         Sprite[] enemy_sprite_list = { null, m_enemy_green, m_enemy_blue, m_enemy_dummy };   // 敵のスプライトリスト(nullはダミー)
 
-        Debug.Log(change_pos);
-        Debug.Log(change_color);
-
         for (int i = 0; i < num; ++i)
         {
             /* 敵の出現間隔を空ける */

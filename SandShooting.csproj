@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\BgControler.cs" />
     <Compile Include="Assets\Scripts\BulletControl.cs" />
     <Compile Include="Assets\Scripts\Common.cs" />
     <Compile Include="Assets\Scripts\DestroyZone.cs" />
