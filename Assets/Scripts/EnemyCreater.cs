@@ -11,7 +11,7 @@ using UnityEngine;
 public class EnemyCreater : MonoBehaviour {
     /* 変数の宣言 */
     public GameObject[] m_enemy;     // 敵
-    [Range(2,6)]
+    [Range(2,10)]
     public int   m_enemy_num;               // 敵の数
     [Range(0.01f,0.5f)]
     public float m_enemy_interval_second;   // 敵の出現間隔(秒)
@@ -167,7 +167,7 @@ public class EnemyCreater : MonoBehaviour {
             ec.SetEnemyAttribute(null, COLOR.NONE);
 
             /* 物理計算は行わない */
-            BoxCollider2D bc = m_enemy_list[i].GetComponent<BoxCollider2D>();
+            PolygonCollider2D bc = m_enemy_list[i].GetComponent<PolygonCollider2D>();
             bc.isTrigger = true;
         }
     }
