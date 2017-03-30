@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletControl : MonoBehaviour {
-    public float m_speedY;  // 速さ
+    public float m_SpeedY;  // 速さ
 
     Rigidbody2D m_rb;
 
@@ -45,7 +45,7 @@ public class BulletControl : MonoBehaviour {
     ------------------------------------*/
     void FixedUpdate()
     {
-        m_rb.velocity = new Vector2(0.0f, m_speedY);
+        m_rb.velocity = new Vector2(0.0f, m_SpeedY);
     }
 
     /*------------------------------------

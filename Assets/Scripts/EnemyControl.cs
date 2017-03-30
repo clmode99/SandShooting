@@ -69,16 +69,16 @@ public class EnemyControl : MonoBehaviour {
         switch (m_current_color)
         {
             case COLOR.RED:
-                SetEnemyAttribute(m_enemy_creater.m_enemy_green, COLOR.GREEN);
+                SetEnemyAttribute(m_enemy_creater.m_EnemyGreen, COLOR.GREEN);
                 break;
 
             case COLOR.GREEN:
-                SetEnemyAttribute(m_enemy_creater.m_enemy_blue, COLOR.BLUE);
+                SetEnemyAttribute(m_enemy_creater.m_EnemyBlue, COLOR.BLUE);
                 break;
 
             case COLOR.BLUE:
             case COLOR.DUMMY:
-                SetEnemyAttribute(m_enemy_creater.m_enemy_red, COLOR.RED);
+                SetEnemyAttribute(m_enemy_creater.m_EnemyRed, COLOR.RED);
                 break;
 
             case COLOR.NONE:

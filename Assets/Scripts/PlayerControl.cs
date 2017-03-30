@@ -10,14 +10,14 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour {
     /* 変数の宣言 */
-    public float m_speedX;      // 速さ
-    public GameObject m_bullet; // 弾
+    public float m_SpeedX;      // 速さ
+    public GameObject m_Bullet; // 弾
 
     [SerializeField, Space(15)]
-    public float m_float_interval_second;   // 浮遊時間(秒)
-    public float m_float_distance;          // 浮遊距離
-    public Sprite m_player_left;
-    public Sprite m_player_right;
+    public float m_FloatIntervalSecond;    // 浮遊時間(秒)
+    public float m_FloatDistance;          // 浮遊距離
+    public Sprite m_PlayerUp;
+    public Sprite m_PlayerDown;
 
     SpriteRenderer m_sr;
     bool  m_is_float;            // 浮いてるか
@@ -34,7 +34,7 @@ public class PlayerControl : MonoBehaviour {
     void Start()
     {
         m_sr = GetComponent<SpriteRenderer>();
-        m_sr.sprite = m_player_left;
+        m_sr.sprite = m_PlayerDown;
 
         m_is_float = false;     // 下がってる
         m_passage_time_ms = 0.0f;
@@ -57,7 +57,7 @@ public class PlayerControl : MonoBehaviour {
         /* 浮遊処理 */
         m_passage_time_ms += Time.deltaTime;
 
-        if (m_passage_time_ms >= m_float_interval_second)
+        if (m_passage_time_ms >= m_FloatIntervalSecond)
         {
             if (m_is_float) MoveDown();     // 上がってるなら下がる
             else MoveUp();                  // 下がってるなら上げる
@@ -75,7 +75,7 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void MoveLeft()
     {
-        float speedX = transform.position.x - m_speedX;
+        float speedX = transform.position.x - m_SpeedX;
         Move(speedX, transform.position.y);
     }
 
@@ -88,7 +88,7 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void MoveRight()
     {
-        float speedX = transform.position.x + m_speedX;
+        float speedX = transform.position.x + m_SpeedX;
         Move(speedX, transform.position.y);
     }
 
@@ -101,15 +101,15 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void MoveUp()
     {
-        float speedY = transform.position.y + m_float_distance;
+        float speedY = transform.position.y + m_FloatDistance;
         Move(transform.position.x, speedY);
 
-        m_sr.sprite = m_player_right;
+        m_sr.sprite = m_PlayerUp;
         m_is_float = true;
     }
 
     /*------------------------------------
-    MoveUp
+    MoveDown
     
     summary:下移動
     param  :なし(void)
@@ -117,10 +117,10 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void MoveDown()
     {
-        float speedY = transform.position.y - m_float_distance;
+        float speedY = transform.position.y - m_FloatDistance;
         Move(transform.position.x, speedY);
 
-        m_sr.sprite = m_player_left;
+        m_sr.sprite = m_PlayerDown;
         m_is_float = false;
     }
 
@@ -149,13 +149,13 @@ public class PlayerControl : MonoBehaviour {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         float player_height_half = sr.bounds.size.y / 2.0f;  // プレイヤーの画像高さの半分
 
-        sr = m_bullet.GetComponent<SpriteRenderer>();
+        sr = m_Bullet.GetComponent<SpriteRenderer>();
         float bullet_height_half = sr.bounds.size.y / 2.0f;  // 弾の画像高さの半分
 
         float bullet_pos_adjust = player_height_half + bullet_height_half;  // 発射位置調整値
 
         /* 弾の生成(発射) */
-        Instantiate(m_bullet, new Vector3(transform.position.x, transform.position.y + bullet_pos_adjust, transform.position.z), Quaternion.identity);
+        Instantiate(m_Bullet, new Vector3(transform.position.x, transform.position.y + bullet_pos_adjust, transform.position.z), Quaternion.identity);
     }
 
 }

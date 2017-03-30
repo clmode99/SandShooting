@@ -10,11 +10,12 @@ using UnityEngine;
 
 public class BgControler : MonoBehaviour {
     /* 変数の宣言 */
-    public GameObject m_bg;             // 背景
-    public float m_scroll_speed_y;      // スクロール速さＹ
+    public GameObject m_Bg;           // 背景
+    public float m_ScrollSpeedY;      // スクロール速さＹ
 
     bool m_is_create;           // 背景を生成したか？
 
+    /* 関数の定義 */
     /*------------------------------------
     Start
 
@@ -37,13 +38,13 @@ public class BgControler : MonoBehaviour {
     void Update()
     {
         /* 移動 */
-        transform.position = new Vector3(transform.position.x, transform.position.y - (m_scroll_speed_y * Time.deltaTime), transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y - (m_ScrollSpeedY * Time.deltaTime), transform.position.z);
 
         /* 新しい背景生成 */
         if (transform.position.y <= -6.0f && m_is_create == false)      // -6.0は画像の上が画面の上にぴったりくるとき
         {
-            Transform start_trans = GameObject.Find("BgStartPosition").transform;       // 背景のスタート座標取得
-            Instantiate(m_bg, start_trans.position, Quaternion.identity);
+            Transform start_trans = transform.parent.gameObject.transform;       // 背景のスタート座標取得
+            Instantiate(m_Bg, start_trans.position, Quaternion.identity, start_trans);
             m_is_create = true;
         }
 
