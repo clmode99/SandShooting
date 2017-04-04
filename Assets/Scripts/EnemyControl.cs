@@ -29,8 +29,7 @@ public class EnemyControl : MonoBehaviour {
            ※m_srはSetEnemyAttribute()で初期化
            (Start()よりも先にSetEnemyAttribute()が呼び出されるため) 
         ------------------------------------------------------------*/
-
-        GameObject enemy_creater_obj = GameObject.Find("EnemyCreater");
+        GameObject enemy_creater_obj = GameObject.FindGameObjectWithTag("EnemyCreater");
         m_enemy_creater = enemy_creater_obj.GetComponent<EnemyCreater>();
     }
 

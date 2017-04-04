@@ -162,30 +162,25 @@ public class EnemyCreater : MonoBehaviour {
     -------------------------------------------*/
     void DestroyEnemy(int first,int end)
     {
-        int enemy_num = 0;  // 倒した敵の数
+        int enemy_num = end - first + 1;  // 倒した敵の数
         EnemyControl ec;
 
         /* スコア加算(※敵消滅より先に処理すること!!) */
-        for (int i = first; i <= end; ++i)      // 敵の数計算
-        {
-            ++enemy_num;
-        }
-
         ec = m_Enemy_list[first].GetComponent<EnemyControl>();      // 適当に最初
         switch (ec.GetEnemyColor())
         {
             case COLOR.RED:
-                ScoreControl red_score = GameObject.Find("UI/Text/RedScore").GetComponent<ScoreControl>();
+                ScoreControl red_score = GameObject.FindGameObjectWithTag("RedScore").GetComponent<ScoreControl>();
                 red_score.AddScore(enemy_num);
                 break;
 
             case COLOR.GREEN:
-                ScoreControl green_score = GameObject.Find("UI/Text/GreenScore").GetComponent<ScoreControl>();
+                ScoreControl green_score = GameObject.FindGameObjectWithTag("GreenScore").GetComponent<ScoreControl>();
                 green_score.AddScore(enemy_num);
                 break;
 
             case COLOR.BLUE:
-                ScoreControl blue_score = GameObject.Find("UI/Text/BlueScore").GetComponent<ScoreControl>();
+                ScoreControl blue_score = GameObject.FindGameObjectWithTag("BlueScore").GetComponent<ScoreControl>();
                 blue_score.AddScore(enemy_num);
                 break;
         }

@@ -10,8 +10,9 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour {
     /* 変数の宣言 */
-    public float m_SpeedX;      // 速さ
-    public GameObject m_Bullet; // 弾
+    public float m_SpeedX;              // 速さ
+    public GameObject m_Bullet;         // 弾
+    public uint       m_BulletMax;      // 弾の最大数
 
     [SerializeField, Space(15)]
     public float m_FloatIntervalSecond;    // 浮遊時間(秒)
@@ -22,6 +23,8 @@ public class PlayerControl : MonoBehaviour {
     SpriteRenderer m_sr;
     bool  m_is_float;            // 浮いてるか
     float m_passage_time_ms;     // 経過時間(ミリ秒)
+
+    int m_bullet_num;       // 画面内の弾の数
 
     /* 関数の定義 */
     /*------------------------------------
@@ -38,6 +41,8 @@ public class PlayerControl : MonoBehaviour {
 
         m_is_float = false;     // 下がってる
         m_passage_time_ms = 0.0f;
+
+        m_bullet_num = 0;
     }
 
     /*------------------------------------
@@ -49,10 +54,12 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void Update()
     {
+        LimitTimer lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
+
         /* キー入力 */
-       if (Input.GetKey(KeyCode.LeftArrow))  MoveLeft();
-       if (Input.GetKey(KeyCode.RightArrow)) MoveRight();
-       if (Input.GetKeyDown(KeyCode.Space))  Shot();
+        if (Input.GetKey(KeyCode.LeftArrow))  MoveLeft();
+        if (Input.GetKey(KeyCode.RightArrow)) MoveRight();
+        if ((Input.GetKeyDown(KeyCode.Space)) && (!(lt.IsUpTime()))) Shot();       // ゲーム終了後は撃てない
 
         /* 浮遊処理 */
         m_passage_time_ms += Time.deltaTime;
@@ -64,6 +71,10 @@ public class PlayerControl : MonoBehaviour {
 
             m_passage_time_ms = 0.0f;
         }
+
+        /* 画面内の弾の数更新 */
+        GameObject[] obj = GameObject.FindGameObjectsWithTag("Bullet");
+        m_bullet_num = obj.Length;
     }
 
     /*------------------------------------
@@ -145,6 +156,10 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void Shot()
     {
+        /* 弾の最大数超えてたら発射不可 */
+        if (m_bullet_num >= m_BulletMax)
+            return;
+
         /* 弾の発射位置調整 */
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         float player_height_half = sr.bounds.size.y / 2.0f;  // プレイヤーの画像高さの半分
