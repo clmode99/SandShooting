@@ -14,12 +14,15 @@ public class Fade : MonoBehaviour {
     /* 変数の宣言 */
     [Range(0.005f, 0.015f)]
     public float m_speed = 0.01f;
+    [Range(0.0f,5.0f)]
+    public float m_delayTime;
 
     float m_red, m_green, m_blue;
     float m_alpha;
 
-    bool m_is_fadein  = true;    // フェードイン中か
+    bool m_is_fadein  = true;   // フェードイン中か
     bool m_is_fadeout = false;  // フェードアウト中か
+    bool m_is_jump    = false;  // フェード中にキーを押して飛ばしたか
 
     /* 関数の定義 */
     /*------------------------------------
@@ -46,10 +49,38 @@ public class Fade : MonoBehaviour {
     ------------------------------------*/
     void Update()
     {
+        StartCoroutine("FadeInOut");
+    }
+
+    /*------------------------------------
+    FadeInOut
+    
+    summary:フェード処理
+    param  :なし(void)
+    return :(IEnumerator)
+    ------------------------------------*/
+    IEnumerator FadeInOut()
+    {
         if (m_is_fadein)
-            FadeIn();
+        {
+            if (Input.anyKey)       // 強制フェードアウト
+            {
+                m_is_fadein = false;
+                m_is_fadeout = true;
+
+                m_is_jump = true;
+            }
+            else
+                FadeIn();
+        }
+
+        if (!m_is_jump)     // 強制時は待たない
+            yield return new WaitForSeconds(m_delayTime);
+
         if (m_is_fadeout)
             FadeOut();
+
+        yield return null;
     }
 
     /*------------------------------------
@@ -85,17 +116,17 @@ public class Fade : MonoBehaviour {
 
         /* タイトル画面へ */
         if (m_alpha >= 1.0f)
-            StartCoroutine("ChangeTitle");
+            StartCoroutine("ChangeTitleScene");
     }
 
     /*------------------------------------
-    ChangeTitle
+    ChangeTitleScene
     
     summary:タイトルシーン遷移
     param  :なし(void)
     return :(IEnumerator)
     ------------------------------------*/
-    IEnumerator ChangeTitle()
+    IEnumerator ChangeTitleScene()
     {
         yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene("Title");

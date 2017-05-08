@@ -13,6 +13,7 @@ public class PlayerControl : MonoBehaviour {
     public float m_SpeedX;              // 速さ
     public GameObject m_Bullet;         // 弾
     public uint       m_BulletMax;      // 弾の最大数
+    public AudioClip  m_BulletSE;       // 弾の効果音
 
     [SerializeField, Space(15)]
     public float m_FloatIntervalSecond;    // 浮遊時間(秒)
@@ -21,6 +22,8 @@ public class PlayerControl : MonoBehaviour {
     public Sprite m_PlayerDown;
 
     SpriteRenderer m_sr;
+    AudioSource    m_as;
+
     bool  m_is_float;            // 浮いてるか
     float m_passage_time_ms;     // 経過時間(ミリ秒)
 
@@ -38,6 +41,9 @@ public class PlayerControl : MonoBehaviour {
     {
         m_sr = GetComponent<SpriteRenderer>();
         m_sr.sprite = m_PlayerDown;
+
+        m_as = GetComponent<AudioSource>();
+        m_as.clip = m_BulletSE;
 
         m_is_float = false;     // 下がってる
         m_passage_time_ms = 0.0f;
@@ -112,8 +118,8 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void MoveUp()
     {
-        float speedY = transform.position.y + m_FloatDistance;
-        Move(transform.position.x, speedY);
+        //float speedY = transform.position.y + m_FloatDistance;
+        //Move(transform.position.x, speedY);
 
         m_sr.sprite = m_PlayerUp;
         m_is_float = true;
@@ -128,8 +134,8 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void MoveDown()
     {
-        float speedY = transform.position.y - m_FloatDistance;
-        Move(transform.position.x, speedY);
+        //float speedY = transform.position.y - m_FloatDistance;
+        //Move(transform.position.x, speedY);
 
         m_sr.sprite = m_PlayerDown;
         m_is_float = false;
@@ -171,6 +177,7 @@ public class PlayerControl : MonoBehaviour {
 
         /* 弾の生成(発射) */
         Instantiate(m_Bullet, new Vector3(transform.position.x, transform.position.y + bullet_pos_adjust, transform.position.z), Quaternion.identity);
+        m_as.PlayOneShot(m_as.clip);
     }
 
 }

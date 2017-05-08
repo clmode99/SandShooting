@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour {
     GameObject m_ui;
     GameObject m_result;
 
-    float m_total_time;         // ゲームのトータル時間
+    float      m_total_time;    // ゲームのトータル時間
     LimitTimer m_limit_time;    // 制限時間管理
 
     bool m_is_start;        // ゲームが始まったか
@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour {
 
         m_is_start  = false;       // 始まってない
         m_is_result = false;
+
     }
 
     /*------------------------------------
@@ -93,7 +94,7 @@ public class GameManager : MonoBehaviour {
 
         /* タイトル画面へ */
         if (m_is_result && (Input.GetKey(KeyCode.Space)))
-            SceneManager.LoadScene("Title");
+            StartCoroutine("ChangeTitleScene");
     }
 
     /*------------------------------------
@@ -208,5 +209,21 @@ public class GameManager : MonoBehaviour {
         int blue_score  = GameObject.FindGameObjectWithTag("BlueResult").GetComponent<BlueResult>().GetScore();
 
         return red_score + green_score + blue_score;
+    }
+
+    /*------------------------------------
+    ChangeTitleScene
+    
+    summary:タイトル画面に遷移
+    param  :なし(void)
+    return :(IEnumerator)
+    ------------------------------------*/
+    IEnumerator ChangeTitleScene()
+    {
+        yield return new WaitForSeconds(0.01f);
+
+        SceneManager.LoadScene("Title");
+
+        yield break;
     }
 }

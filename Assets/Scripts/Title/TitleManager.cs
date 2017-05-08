@@ -10,7 +10,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;      // SceneManager
 
 public class TitleManager : MonoBehaviour {
-
     /* 関数の定義 */
     /*------------------------------------
     Start
@@ -20,9 +19,7 @@ public class TitleManager : MonoBehaviour {
     return :なし(void)
     ------------------------------------*/
     void Start()
-    {
-
-    }
+    {}
 
     /*------------------------------------
     Update
@@ -33,8 +30,24 @@ public class TitleManager : MonoBehaviour {
     ------------------------------------*/
     void Update()
     {
-        // TODO:フェードアウトしてシーン遷移したい
         if (Input.GetKey(KeyCode.Space))
-            SceneManager.LoadScene("Play");
+            StartCoroutine("ChangePlayScene");
+    }
+
+
+    /*------------------------------------
+    ChangePlayScene
+
+    summary:プレイ画面に遷移
+    param  :なし(void)
+    return :(IEnumerator)
+------------------------------------*/
+    IEnumerator ChangePlayScene()
+    {
+        yield return new WaitForSeconds(1.7f);      // この間にフェードアウト処理
+
+        SceneManager.LoadScene("Play");
+
+        yield break;
     }
 }
