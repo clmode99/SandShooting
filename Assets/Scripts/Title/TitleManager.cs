@@ -44,7 +44,7 @@ public class TitleManager : MonoBehaviour {
 ------------------------------------*/
     IEnumerator ChangePlayScene()
     {
-        yield return new WaitForSeconds(1.7f);      // この間にフェードアウト処理
+        yield return new WaitForSeconds(1.8f);      // この間にフェードアウト処理
 
         SceneManager.LoadScene("Play");
 

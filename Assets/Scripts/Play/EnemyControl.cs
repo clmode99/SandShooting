@@ -10,6 +10,13 @@ using UnityEngine;
 
 public class EnemyControl : MonoBehaviour {
     /* 変数の宣言 */
+    public GameObject[] m_Particle;
+
+    public AudioClip   m_CollisionSe;
+    public AudioClip   m_FireSe;
+    public AudioClip   m_WingSe;
+    public AudioClip[] m_IceSe;     // 氷は２つ
+
     SpriteRenderer m_sr;
     EnemyCreater   m_enemy_creater;
 
@@ -31,6 +38,8 @@ public class EnemyControl : MonoBehaviour {
         ------------------------------------------------------------*/
         GameObject enemy_creater_obj = GameObject.FindGameObjectWithTag("EnemyCreater");
         m_enemy_creater = enemy_creater_obj.GetComponent<EnemyCreater>();
+
+        Debug.Assert(m_IceSe.Length == 2);      // ※IceSeチェック
     }
 
     /*------------------------------------
@@ -41,7 +50,9 @@ public class EnemyControl : MonoBehaviour {
     return :なし(void)
     ------------------------------------*/
     void Update()
-    {}
+    {
+        Debug.Assert(m_Particle.Length == 3);        // パーティクルの数制限(色の数:3)
+    }
 
     /*------------------------------------
     OnCollisionEnter2D
@@ -53,7 +64,12 @@ public class EnemyControl : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D coll)
     {
         if (coll.gameObject.tag == "Bullet")
+        {
+            AudioSource audio = GetComponent<AudioSource>();
+            audio.PlayOneShot(m_CollisionSe, 0.75f);
+
             ChangeEnemyColor();
+        }
     }
 
     /*------------------------------------
@@ -116,5 +132,53 @@ public class EnemyControl : MonoBehaviour {
     public COLOR GetEnemyColor()
     {
         return m_current_color;
+    }
+
+    /*------------------------------------
+    CreateEffect
+    
+    summary:エフェクト生成
+    param  :作成するエフェクトの色(COLOR)
+    return :なし(void)
+    ------------------------------------*/
+    public void CreateEffect(COLOR color)
+    {
+        GameObject obj    = null;     // 一時的パーティクルオブジェクト
+        AudioSource audio = GetComponent<AudioSource>();
+
+        switch(color)
+        {
+            case COLOR.RED:
+                obj = m_Particle[(int)COLOR.RED];
+                audio.PlayOneShot(m_FireSe);
+                break;
+
+            case COLOR.GREEN:
+                obj = m_Particle[(int)COLOR.GREEN];
+                audio.PlayOneShot(m_WingSe);
+                break;
+
+            case COLOR.BLUE:
+                obj = m_Particle[(int)COLOR.BLUE];
+                StartCoroutine(PlayIceSe(audio));
+                break;
+
+            default:
+                Debug.Assert(false);        // エラー
+                break;
+        }
+
+        Instantiate(obj, transform.position, Quaternion.identity);
+    }
+
+    IEnumerator PlayIceSe(AudioSource audio)
+    {
+        audio.PlayOneShot(m_IceSe[0]);
+
+        yield return new WaitForSeconds(0.8f);
+
+        audio.PlayOneShot(m_IceSe[1]);
+
+        yield return null;
     }
 }

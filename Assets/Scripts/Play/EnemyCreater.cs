@@ -164,10 +164,12 @@ public class EnemyCreater : MonoBehaviour {
     {
         int enemy_num = end - first + 1;  // 倒した敵の数
         EnemyControl ec;
+        COLOR        target_color;          // はさんで消した色
 
         /* スコア加算(※敵消滅より先に処理すること!!) */
         ec = m_Enemy_list[first].GetComponent<EnemyControl>();      // 適当に最初
-        switch (ec.GetEnemyColor())
+        target_color = ec.GetEnemyColor();
+        switch (target_color)
         {
             case COLOR.RED:
                 ScoreControl red_score = GameObject.FindGameObjectWithTag("RedScore").GetComponent<ScoreControl>();
@@ -191,6 +193,9 @@ public class EnemyCreater : MonoBehaviour {
             /* 消滅風(実際には消してない) */
             ec = m_Enemy_list[i].GetComponent<EnemyControl>();
             ec.SetEnemyAttribute(null, COLOR.NONE);
+
+            /* エフェクト生成 */
+            ec.CreateEffect(target_color);
 
             /* 物理計算は行わない */
             PolygonCollider2D bc = m_Enemy_list[i].GetComponent<PolygonCollider2D>();
