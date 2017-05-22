@@ -201,6 +201,5 @@ public class EnemyCreater : MonoBehaviour {
             PolygonCollider2D bc = m_Enemy_list[i].GetComponent<PolygonCollider2D>();
             bc.isTrigger = true;
         }
-
     }
 }

@@ -63,9 +63,11 @@ public class PlayerControl : MonoBehaviour {
         LimitTimer lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
 
         /* キー入力 */
-        if (Input.GetKey(KeyCode.LeftArrow))  MoveLeft();
-        if (Input.GetKey(KeyCode.RightArrow)) MoveRight();
-        if ((Input.GetKeyDown(KeyCode.Space)) && (!(lt.IsUpTime()))) Shot();       // ゲーム終了後は撃てない
+        float rev = Input.GetAxisRaw("Horizontal");                 // 入力補正値
+        float speed_x = transform.position.x + (rev * m_SpeedX);    // 移動量
+        Move(speed_x, transform.position.y);
+
+        if ((Input.GetButtonDown("Shot")) && (!(lt.IsUpTime()))) Shot();       // ゲーム終了後は撃てない
 
         /* 浮遊処理 */
         m_passage_time_ms += Time.deltaTime;
@@ -84,32 +86,6 @@ public class PlayerControl : MonoBehaviour {
     }
 
     /*------------------------------------
-    MoveLeft
-    
-    summary:左移動
-    param  :なし(void)
-    return :なし(void)
-    ------------------------------------*/
-    void MoveLeft()
-    {
-        float speedX = transform.position.x - m_SpeedX;
-        Move(speedX, transform.position.y);
-    }
-
-    /*------------------------------------
-    MoveRight
-    
-    summary:右移動
-    param  :なし(void)
-    return :なし(void)
-    ------------------------------------*/
-    void MoveRight()
-    {
-        float speedX = transform.position.x + m_SpeedX;
-        Move(speedX, transform.position.y);
-    }
-
-    /*------------------------------------
     MoveUp
     
     summary:上移動
@@ -118,9 +94,6 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void MoveUp()
     {
-        //float speedY = transform.position.y + m_FloatDistance;
-        //Move(transform.position.x, speedY);
-
         m_sr.sprite = m_PlayerUp;
         m_is_float = true;
     }
@@ -134,9 +107,6 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void MoveDown()
     {
-        //float speedY = transform.position.y - m_FloatDistance;
-        //Move(transform.position.x, speedY);
-
         m_sr.sprite = m_PlayerDown;
         m_is_float = false;
     }

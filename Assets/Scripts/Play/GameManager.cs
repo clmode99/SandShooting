@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour {
             StartCoroutine("Result");
 
         /* タイトル画面へ */
-        if (m_is_result && (Input.GetKey(KeyCode.Space)))
+        if (m_is_result && (Input.GetButtonDown("Submit")))
             StartCoroutine("ChangeTitleScene");
     }
 

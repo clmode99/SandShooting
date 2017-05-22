@@ -63,7 +63,7 @@ public class Fade : MonoBehaviour {
     {
         if (m_is_fadein)
         {
-            if (Input.anyKey)       // 強制フェードアウト
+            if (Input.anyKeyDown)       // 強制フェードアウト
             {
                 m_is_fadein = false;
                 m_is_fadeout = true;

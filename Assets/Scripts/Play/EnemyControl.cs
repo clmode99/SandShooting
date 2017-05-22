@@ -143,8 +143,8 @@ public class EnemyControl : MonoBehaviour {
     ------------------------------------*/
     public void CreateEffect(COLOR color)
     {
-        GameObject obj    = null;     // 一時的パーティクルオブジェクト
         AudioSource audio = GetComponent<AudioSource>();
+        GameObject  obj   = null;     // 一時的パーティクルオブジェクト
 
         switch(color)
         {
