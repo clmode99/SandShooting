@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour {
     public GameObject m_UI;
     public GameObject m_Result;
 
+    [SerializeField, HeaderAttribute("Sound")]
+
     Sprite m_info_bg;
     Text   m_text;
 
@@ -27,6 +29,8 @@ public class GameManager : MonoBehaviour {
     GameObject m_player;
     GameObject m_ui;
     GameObject m_result;
+
+    SoundManager m_sm;
 
     float      m_total_time;    // ゲームのトータル時間
     LimitTimer m_limit_time;    // 制限時間管理
@@ -46,6 +50,9 @@ public class GameManager : MonoBehaviour {
     ------------------------------------*/
     void Start()
     {
+        m_sm = GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>();
+        m_sm.PlayBGM(BGM_TYPE.PLAY);
+
         GameObject child_text = GameObject.Find("Canvas/Text");
         m_text = child_text.GetComponent<Text>();
 
@@ -53,7 +60,6 @@ public class GameManager : MonoBehaviour {
 
         m_is_start  = false;       // 始まってない
         m_is_result = false;
-
     }
 
     /*------------------------------------
@@ -94,7 +100,12 @@ public class GameManager : MonoBehaviour {
 
         /* タイトル画面へ */
         if (m_is_result && (Input.GetButtonDown("Submit")))
+        {
+            m_sm.PlaySubmitSE();
+            m_sm.FadeStop();
+
             StartCoroutine("ChangeTitleScene");
+        }
     }
 
     /*------------------------------------
@@ -220,7 +231,7 @@ public class GameManager : MonoBehaviour {
     ------------------------------------*/
     IEnumerator ChangeTitleScene()
     {
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(1.0f);
 
         SceneManager.LoadScene("Title");
 
