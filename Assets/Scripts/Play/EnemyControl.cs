@@ -171,13 +171,20 @@ public class EnemyControl : MonoBehaviour {
         Instantiate(obj, transform.position, Quaternion.identity);
     }
 
+    /*------------------------------------
+    PlayIceSe
+
+    summary:氷の音再生
+    param  :再生に使うもの(AudioSource)
+    return :(IEnumerator)
+    ------------------------------------*/
     IEnumerator PlayIceSe(AudioSource audio)
     {
-        audio.PlayOneShot(m_IceSe[0]);
+        audio.PlayOneShot(m_IceSe[0], 0.8f);
 
         yield return new WaitForSeconds(0.8f);
 
-        audio.PlayOneShot(m_IceSe[1]);
+        audio.PlayOneShot(m_IceSe[1], 0.8f);
 
         yield return null;
     }

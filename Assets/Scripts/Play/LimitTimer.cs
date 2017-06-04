@@ -41,11 +41,21 @@ public class LimitTimer : MonoBehaviour {
     {
         m_total_time = (Mathf.Max(0.0f, m_total_time - Time.deltaTime));
 
+        m_text.text = ((int)m_total_time).ToString();
+
+        /* ポーズ処理 */
+        PauseController pc = GameObject.FindGameObjectWithTag("GameManager").GetComponent<PauseController>();
+        LimitTimer lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
+
+        if (pc.IsPause() || lt.IsUpTime())
+            m_text.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);       // グレー
+        else
+            m_text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);       // ふつー
+
         /* 10秒切ったら赤にする */
         if (m_total_time <= 10.0f)
-            m_text.color = Color.red;
+            m_text.color *= Color.red;      // 上のポーズ中も色が反映されるように(*=)
 
-        m_text.text = ((int)m_total_time).ToString();
     }
 
     /*------------------------------------------

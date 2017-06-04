@@ -38,6 +38,15 @@ public class ScoreControl : MonoBehaviour {
     void Update()
     {
         m_text.text = m_score.ToString();
+
+        /* ポーズとタイムアップのときはグレーになる処理 */
+        PauseController pc = GameObject.FindGameObjectWithTag("GameManager").GetComponent<PauseController>();
+        LimitTimer      lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
+
+        if (pc.IsPause()||lt.IsUpTime())
+            m_text.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);       // グレー
+        else
+            m_text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);       // ふつー
     }
 
     /*------------------------------------

@@ -12,7 +12,9 @@ using UnityEngine.SceneManagement;      // SceneManager
 public class TitleManager : MonoBehaviour {
     /* 変数の宣言 */
     SoundManager m_sm;
-    SpriteRenderer[]      m_sr = new SpriteRenderer[(int)TITLE_BUTTON_TYPE.BUTTON_NUM];
+    SpriteRenderer[] m_sr = new SpriteRenderer[(int)TITLE_BUTTON_TYPE.BUTTON_NUM];
+    Transform[]      m_tf = new Transform[(int)TITLE_BUTTON_TYPE.BUTTON_NUM];
+
 
     // TITLE_BUTTON_TYPEのint版
     const int START = (int)TITLE_BUTTON_TYPE.START;
@@ -20,6 +22,8 @@ public class TitleManager : MonoBehaviour {
 
     Color m_select_color   = new Color(1.0f, 1.0f, 1.0f, 1.0f);       // 選択時
     Color m_noselect_color = new Color(1.0f, 1.0f, 1.0f, 0.747f);     // 未選択時
+    Vector3 m_select_scale   = new Vector3(2.5f, 2.2f, 1.0f);
+    Vector3 m_noselect_scale = new Vector3(2.5f * 0.75f, 2.2f * 0.75f, 1.0f);
 
     /* 関数の定義 */
     /*------------------------------------
@@ -36,12 +40,20 @@ public class TitleManager : MonoBehaviour {
         m_sm = GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>();
         m_sm.PlayBGM(BGM_TYPE.TITLE);
 
-        m_sr[START] = GameObject.FindGameObjectWithTag("StartButton").GetComponent<SpriteRenderer>();
-        m_sr[END]   = GameObject.FindGameObjectWithTag("EndButton").GetComponent<SpriteRenderer>();
+        GameObject start_button = GameObject.FindGameObjectWithTag("StartButton");
+        GameObject end_button   = GameObject.FindGameObjectWithTag("EndButton");
+
+        m_sr[START] = start_button.GetComponent<SpriteRenderer>();
+        m_sr[END]   = end_button.GetComponent<SpriteRenderer>();
+        m_tf[START] = start_button.GetComponent<Transform>();
+        m_tf[END] = end_button.GetComponent<Transform>();
 
         /* 最初はスタートが選択されてる状態 */
         m_sr[START].color = m_select_color;
         m_sr[END].color   = m_noselect_color;
+
+        m_tf[START].localScale = m_select_scale;
+        m_tf[END].localScale   = m_noselect_scale;
     }
 
     /*------------------------------------
@@ -111,6 +123,10 @@ public class TitleManager : MonoBehaviour {
 
                 m_sr[START].color = m_select_color;
                 m_sr[END].color   = m_noselect_color;
+
+                m_tf[START].localScale = m_select_scale;
+                m_tf[END].localScale = m_noselect_scale;
+
                 m_sm.PlaySelectSE();
                 break;
 
@@ -120,6 +136,10 @@ public class TitleManager : MonoBehaviour {
 
                 m_sr[START].color = m_noselect_color;
                 m_sr[END].color   = m_select_color;
+
+                m_tf[START].localScale = m_noselect_scale;
+                m_tf[END].localScale   = m_select_scale;
+
                 m_sm.PlaySelectSE();
                 break;
         }

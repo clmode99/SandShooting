@@ -60,14 +60,18 @@ public class PlayerControl : MonoBehaviour {
     ------------------------------------*/
     void Update()
     {
-        LimitTimer lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
+        LimitTimer      lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
+        PauseController pc = GameObject.FindGameObjectWithTag("GameManager").GetComponent<PauseController>();
 
         /* キー入力 */
-        float rev = Input.GetAxisRaw("Horizontal");                 // 入力補正値
-        float speed_x = transform.position.x + (rev * m_SpeedX);    // 移動量
-        Move(speed_x, transform.position.y);
+        if (!(pc.IsPause()))            // ポーズ中はだめ
+        {
+            float rev = Input.GetAxisRaw("Horizontal");                 // 入力補正値
+            float speed_x = transform.position.x + (rev * m_SpeedX);    // 移動量
+            Move(speed_x, transform.position.y);
 
-        if ((Input.GetButtonDown("Shot")) && (!(lt.IsUpTime()))) Shot();       // ゲーム終了後は撃てない
+            if ((Input.GetButtonDown("Shot")) && (!(lt.IsUpTime()))) Shot();       // ゲーム終了後は撃てない
+        }
 
         /* 浮遊処理 */
         m_passage_time_ms += Time.deltaTime;

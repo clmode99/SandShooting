@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviour {
     public GameObject m_UI;
     public GameObject m_Result;
 
-    [SerializeField, HeaderAttribute("Sound")]
-
     Sprite m_info_bg;
     Text   m_text;
 
@@ -236,5 +234,29 @@ public class GameManager : MonoBehaviour {
         SceneManager.LoadScene("Title");
 
         yield break;
+    }
+
+    /*--------------------------------------------
+    IsStart
+    
+    summary:スタートした？
+    param  :なし(void)
+    return :スタートした(true)、してない(false)
+    --------------------------------------------*/
+    public bool IsStart()
+    {
+        return m_is_start;
+    }
+
+    /*--------------------------------------------
+    IsResult
+    
+    summary:リザルト中？
+    param  :なし(void)
+    return :リザルト中(true)、そうじゃない(false)
+    --------------------------------------------*/
+    public bool IsResult()
+    {
+        return m_is_result;
     }
 }
