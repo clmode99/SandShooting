@@ -40,7 +40,7 @@ public class ScoreControl : MonoBehaviour {
         m_text.text = m_score.ToString();
 
         /* ポーズとタイムアップのときはグレーになる処理 */
-        PauseController pc = GameObject.FindGameObjectWithTag("GameManager").GetComponent<PauseController>();
+        PauseController pc = GameObject.FindGameObjectWithTag("PlayManager").GetComponent<PauseController>();
         LimitTimer      lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
 
         if (pc.IsPause()||lt.IsUpTime())

@@ -21,8 +21,8 @@ public class TotalScoreResult : MonoBehaviour {
     void Start()
     {
         /* トータルスコア取得 */
-        GameManager gm  = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        int total_score = gm.GetTotalScore();
+        PlayManager pm  = GameObject.FindGameObjectWithTag("PlayManager").GetComponent<PlayManager>();
+        int total_score = pm.GetTotalScore();
 
         Text text = GetComponent<Text>();
         text.text = total_score.ToString();

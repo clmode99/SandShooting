@@ -7,14 +7,16 @@ Author:Miyu Hara
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;      // SceneManager
 
 public class TitleManager : MonoBehaviour {
     /* 変数の宣言 */
+    public GameObject m_Player;
+
     SoundManager m_sm;
     SpriteRenderer[] m_sr = new SpriteRenderer[(int)TITLE_BUTTON_TYPE.BUTTON_NUM];
     Transform[]      m_tf = new Transform[(int)TITLE_BUTTON_TYPE.BUTTON_NUM];
-
 
     // TITLE_BUTTON_TYPEのint版
     const int START = (int)TITLE_BUTTON_TYPE.START;
@@ -37,23 +39,39 @@ public class TitleManager : MonoBehaviour {
     {
         int controller_num = Input.GetJoystickNames().Length;       // 接続されてるコントローラーの数
 
-        m_sm = GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>();
-        m_sm.PlayBGM(BGM_TYPE.TITLE);
-
         GameObject start_button = GameObject.FindGameObjectWithTag("StartButton");
-        GameObject end_button   = GameObject.FindGameObjectWithTag("EndButton");
+        GameObject end_button = GameObject.FindGameObjectWithTag("EndButton");
 
         m_sr[START] = start_button.GetComponent<SpriteRenderer>();
-        m_sr[END]   = end_button.GetComponent<SpriteRenderer>();
+        m_sr[END] = end_button.GetComponent<SpriteRenderer>();
         m_tf[START] = start_button.GetComponent<Transform>();
         m_tf[END] = end_button.GetComponent<Transform>();
 
         /* 最初はスタートが選択されてる状態 */
         m_sr[START].color = m_select_color;
-        m_sr[END].color   = m_noselect_color;
+        m_sr[END].color = m_noselect_color;
 
         m_tf[START].localScale = m_select_scale;
-        m_tf[END].localScale   = m_noselect_scale;
+        m_tf[END].localScale = m_noselect_scale;
+
+        /* 難易度選択時から遷移したとき */
+        GameManager gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        m_sm = GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>();
+
+        /* 難易度から遷移 */
+        if (gm.GetOldScene() == SCENE.SCENE_LEVEL)
+            Destroy(GameObject.FindGameObjectWithTag("LevelManager"));
+        /* 通常時 */
+        else
+        {
+            GameObject player = Instantiate(m_Player, m_Player.transform.position, Quaternion.identity);
+            DontDestroyOnLoad(player);
+
+            m_sm.PlayBGM(BGM_TYPE.TITLE);
+
+            /* フェードイン処理有効 */
+            //GameObject.FindGameObjectWithTag("TitlePanel").GetComponent<FadeIn>().enabled = true;
+        }
     }
 
     /*------------------------------------
@@ -65,18 +83,13 @@ public class TitleManager : MonoBehaviour {
     ------------------------------------*/
     void Update()
     {
-        SoundManager sm = GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>();
-        FadeOut      fo  = GameObject.Find("Canvas/Panel").GetComponent<FadeOut>();
-
         if (Input.GetButtonDown("Submit"))
         {
             // START
-            if (m_sr[0].color == m_select_color)
+            if (m_sr[START].color == m_select_color)
             {
-                StartCoroutine("ChangePlayScene");
-                sm.PlaySubmitSE();
-                sm.FadeStop();
-                fo.StartFadeout();
+                SceneManager.LoadScene("Level");
+                m_sm.PlaySubmitSE();
             }
             // END
             else
@@ -87,22 +100,6 @@ public class TitleManager : MonoBehaviour {
         float move = Input.GetAxisRaw("Vertical");
         if     (move > 0.0f) SelectButton(TITLE_BUTTON_TYPE.START);     // 上
         else if(move < 0.0f) SelectButton(TITLE_BUTTON_TYPE.END);       // 下
-    }
-
-    /*--------------------------------
-    ChangePlayScene
-
-    summary:プレイ画面に遷移
-    param  :なし(void)
-    return :(IEnumerator)
-------------------------------------*/
-    IEnumerator ChangePlayScene()
-    {
-        yield return new WaitForSeconds(1.7f);      // この間にフェードアウト処理
-
-        SceneManager.LoadScene("Play");
-
-        yield break;
     }
 
     /*-----------------------------------------
@@ -128,6 +125,7 @@ public class TitleManager : MonoBehaviour {
                 m_tf[END].localScale = m_noselect_scale;
 
                 m_sm.PlaySelectSE();
+
                 break;
 
             case TITLE_BUTTON_TYPE.END:
@@ -145,4 +143,5 @@ public class TitleManager : MonoBehaviour {
         }
 
     }
+
 }

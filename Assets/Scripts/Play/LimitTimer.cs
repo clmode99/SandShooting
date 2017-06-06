@@ -44,7 +44,7 @@ public class LimitTimer : MonoBehaviour {
         m_text.text = ((int)m_total_time).ToString();
 
         /* ポーズ処理 */
-        PauseController pc = GameObject.FindGameObjectWithTag("GameManager").GetComponent<PauseController>();
+        PauseController pc = GameObject.FindGameObjectWithTag("PlayManager").GetComponent<PauseController>();
         LimitTimer lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
 
         if (pc.IsPause() || lt.IsUpTime())

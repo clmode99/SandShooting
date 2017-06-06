@@ -25,8 +25,8 @@ public class BlueResult : MonoBehaviour {
     void Start()
     {
         /* 青スコア取得 */
-        GameManager gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        int score = gm.GetScore(COLOR.BLUE);
+        PlayManager pm = GameObject.FindGameObjectWithTag("PlayManager").GetComponent<PlayManager>();
+        int score = pm.GetScore(COLOR.BLUE);
 
         /* 青スコア計算 */
         m_score = score * m_Unit;

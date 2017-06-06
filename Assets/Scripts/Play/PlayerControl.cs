@@ -61,7 +61,7 @@ public class PlayerControl : MonoBehaviour {
     void Update()
     {
         LimitTimer      lt = GameObject.FindGameObjectWithTag("LimitTime").GetComponent<LimitTimer>();
-        PauseController pc = GameObject.FindGameObjectWithTag("GameManager").GetComponent<PauseController>();
+        PauseController pc = GameObject.FindGameObjectWithTag("PlayManager").GetComponent<PauseController>();
 
         /* キー入力 */
         if (!(pc.IsPause()))            // ポーズ中はだめ

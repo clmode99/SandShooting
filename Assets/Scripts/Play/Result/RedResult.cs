@@ -25,8 +25,8 @@ public class RedResult : MonoBehaviour {
     void Start()
     {
         /* 赤スコア取得 */
-        GameManager gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        int score = gm.GetScore(COLOR.RED);
+        PlayManager pm = GameObject.FindGameObjectWithTag("PlayManager").GetComponent<PlayManager>();
+        int score = pm.GetScore(COLOR.RED);
 
         /* 赤スコア計算 */
         m_score = score * m_Unit;
