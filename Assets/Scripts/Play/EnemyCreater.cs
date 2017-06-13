@@ -28,10 +28,18 @@ public class EnemyCreater : MonoBehaviour {
     public int m_GreenScore;    // 緑
     public int m_BlueScore;     // 青
 
+    // 拡縮率
+    [SerializeField, HeaderAttribute("Enemy Scale")]
+    public float m_EasyScale;
+    public float m_NormalScale;
+    public float m_HardScale;
+
     GameObject m_Enemy_obj;        // 敵オブジェクト
     GameObject[] m_Enemy_list;     // 敵の管理
     float m_Enemy_size_width;      // 敵の画像の幅
     bool  m_is_init;               // 初期化
+
+    Vector3 m_enemy_scale;         // 拡縮率(難易度によって変化)
 
     /* 関数の定義 */
     /*------------------------------------
@@ -50,6 +58,23 @@ public class EnemyCreater : MonoBehaviour {
         /* 敵の画像幅取得 */
         SpriteRenderer sr = m_Enemy[0].GetComponent<SpriteRenderer>();
         m_Enemy_size_width = sr.bounds.size.x;        // 敵の画像幅
+
+        /* 難易度によって拡縮率変化 */
+        GameManager gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        switch(gm.GetLevel())
+        {
+            case LEVEL.EASY:
+                m_enemy_scale = new Vector3(m_EasyScale, m_EasyScale, m_EasyScale);
+                break;
+
+            case LEVEL.NORMAL:
+                m_enemy_scale = new Vector3(m_NormalScale, m_NormalScale, m_NormalScale);
+                break;
+
+            case LEVEL.HARD:
+                m_enemy_scale = new Vector3(m_HardScale, m_HardScale, m_HardScale);
+                break;
+        }
     }
 
     /*------------------------------------
@@ -141,6 +166,7 @@ public class EnemyCreater : MonoBehaviour {
 
             /* 敵の生成 */
             m_Enemy_list[i] = Instantiate(m_Enemy_obj, new Vector3(transform.position.x + (width * i), transform.position.y, transform.position.z), Quaternion.identity);
+            m_Enemy_list[i].transform.localScale = m_enemy_scale;
 
             /* 色決め */
             EnemyControl ec = m_Enemy_list[i].GetComponent<EnemyControl>();
